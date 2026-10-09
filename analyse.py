@@ -1,14 +1,6 @@
-# Read results.csv and make a summary table and three figures.
-#
-#   python analyse.py
-#
+
 # Part 1: what each policy does across the futures (no machine learning).
-# Part 2: which uncertainty matters most for each result (machine learning).
-#   A random forest learns "4 uncertain inputs -> result" from the solver runs.
-#   - We first check it on runs it has not seen (5-fold cross-validation) and compare it with
-#     a linear regression. If the forest predicts well, we can trust what it learned.
-#   - Then, for each input, we shuffle that input's values and see how much worse the forest
-#     predicts (permutation importance). The more it gets worse, the more that input matters.
+# Part 2: which uncertainty matters most for each result (machine learning)..
 
 import os
 
@@ -30,9 +22,9 @@ RESULTS = {"nuclear_2050": "Nuclear 2050 (GW)", "gas_2050": "Gas 2050 (GW)",
 COLOURS = {"cap": "#2a78d6", "price": "#eb6834"}
 NAMES = {"cap": "Emission cap (original case)", "price": "Carbon price"}
 
-os.makedirs("output", exist_ok=True)       # all tables and figures go to this folder
+os.makedirs("output", exist_ok=True)      
 runs = pd.read_csv("results.csv")
-runs["system_cost"] = runs["system_cost"] / 1000          # million EUR -> billion EUR
+runs["system_cost"] = runs["system_cost"] / 1000          
 ok = runs[runs["status"] == "optimal"]
 
 
@@ -127,7 +119,7 @@ print(drivers.to_string(index=False))
 fig, ax = plt.subplots(figsize=(6, 4))
 data = ok[ok["policy"] == "cap"]
 ax.scatter(data["gas_price"], data["co2_total"], s=15, color=COLOURS["cap"])
-ax.set_xlabel("Gas price (x original)")
+ax.set_xlabel("Gas price")
 ax.set_ylabel("CO2 2023-2050 (Mt)")
 ax.set_title("Emission cap: cumulative CO2 vs gas price (one dot = one future)", loc="left", fontsize=10)
 ax.grid(color="#e6e5e1")

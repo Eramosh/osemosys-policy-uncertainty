@@ -1,13 +1,4 @@
 # Solve the Poland OSeMOSYS model for many uncertain futures, under two climate policies.
-#
-#   python run_experiment.py check    -> solves the original case (must give the MUIO objective)
-#   python run_experiment.py          -> runs the whole experiment and writes results.csv
-#
-# How one run works:
-#   1. read model/data_processed.txt (the data file MUIO writes just before solving)
-#   2. change a few parameter values (the policy and the uncertainties)
-#   3. glpsol builds the optimisation problem, CBC solves it (the same two programs MUIO uses)
-#   4. read capacities and emissions from the solution and save one row in results.csv
 
 import csv
 import os
@@ -19,8 +10,8 @@ import numpy as np
 # ----------------------------------------------------------------------------
 # Settings
 # ----------------------------------------------------------------------------
-GLPSOL = "glpsol"     # or the full path, e.g. r"C:\...\MUIO\WebAPP\SOLVERs\GLPK\glpsol.exe"
-CBC = "cbc"           # or the full path to cbc.exe
+GLPSOL = r"C:\Users\emili\AppData\Local\muio\app-5.3.0\resources\app\app\WebAPP\SOLVERs\GLPK\glpsol.exe"     # glpsol Insert path to glpsol.exe
+CBC = r"C:\Users\emili\AppData\Local\muio\app-5.3.0\resources\app\app\WebAPP\SOLVERs\COIN-OR\cbc.exe"           #cbc Insert path to cbc.exe
 MODEL_FILE = "model/model_muio_v5.3.txt"
 DATA_FILE = "model/data_processed.txt"
 RESULTS_FILE = "results.csv"
@@ -30,13 +21,14 @@ YEARS = list(range(2023, 2051))
 N_FUTURES = 150
 SEED = 1
 
-# Uncertainties: (lowest, highest). 1.0 = value in the original data.
+# Uncertainties, 1.0 = value in the original data.
+# changes are applied from 2026
 DEMAND_2050 = (0.9, 1.3)       # electricity demand in 2050 (changes gradually from 2026)
-GAS_PRICE = (0.7, 1.8)         # gas price from 2026
-RENEWABLE_BUILD = (0.6, 1.4)   # max new solar and wind capacity per year, from 2026
+GAS_PRICE = (0.7, 1.8)         # gas price
+RENEWABLE_BUILD = (0.6, 1.4)   # max new solar and wind capacity per year
 NUCLEAR_DELAY = (0, 8)         # years the nuclear programme is delayed
 
-# Carbon price for the "price" policy: 60 EUR/t in 2026, rising in a straight line to 200 EUR/t in 2050
+# Carbon price policy: 60 EUR/t in 2026, rising linearly to 200 EUR/t in 2050
 PRICE_2026 = 60.0
 PRICE_2050 = 200.0
 
@@ -165,7 +157,7 @@ def solve(data_text):
     if os.path.exists(solution_file):
         os.remove(solution_file)
 
-    # run each solver from its own folder (MUIO does the same; on Windows this finds its .dll files)
+    # run each solver from its own folder
     glpsol_folder = os.path.dirname(GLPSOL) or None
     cbc_folder = os.path.dirname(CBC) or None
     subprocess.run([GLPSOL, "--check", "-m", os.path.abspath(MODEL_FILE), "-d", data_file, "--wlp", lp_file],
@@ -204,7 +196,7 @@ def solve(data_text):
 
 
 def system_cost(result, policy):
-    """Objective minus what is paid for emitting (a transfer of money, not a real cost).
+    """Objective minus what is paid for emitting.
     Discounted like the objective: 5 % per year, middle of the year. Million EUR."""
     payments = 0.0
     if policy == "price":
@@ -232,10 +224,10 @@ def make_futures():
 def check():
     result = solve(make_data("cap", None))
     print("Original case: objective %.5f, MUIO: %.5f" % (result["objective"], MUIO_OBJECTIVE))
-    base = {"demand_2050": 1.0, "gas_price": 1.0, "renewable_build": 1.0, "nuclear_delay": 0}
+    base = {"demand_2050": 1.0, "gas_price": 1.0, "renewable_build": 1.0, "nuclear_delay": 0} #tests if the mmodel work when introducing the random changing functions
     result = solve(make_data("cap", base))
     print("Same case through the experiment code: objective %.5f" % result["objective"])
-    result = solve(make_data("price", base))
+    result = solve(make_data("price", base)) #tests if the price policy runs
     print("Price policy, original future: objective %.3f" % result["objective"])
 
 
