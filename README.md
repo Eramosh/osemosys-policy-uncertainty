@@ -1,7 +1,7 @@
 # Climate policy under uncertainty in an OSeMOSYS model of Poland
 
 **Question.** Poland's power system can be pushed towards zero emissions with an emission cap or with a carbon
-price. How do the two policies behave when the future is uncertain, and which uncertainty have the most impact?
+price. How do the two policies behave when the future is uncertain, and which uncertainty has the most impact?
 
 **Method.**
 1. Take an existing OSeMOSYS model of the Polish power system (built in MUIO, 2023-2050, electricity only).
@@ -47,7 +47,7 @@ output/                     summary.csv, drivers.csv and three figures
 2. Find `glpsol.exe` and `cbc.exe` inside the MUIO folder and write their full paths at the top of
    `run_experiment.py` (`GLPSOL = r"C:\...\glpsol.exe"`, `CBC = r"C:\...\cbc.exe"`).
    On Mac/Linux you can install them instead (`brew install glpk cbc`) and leave `"glpsol"` and `"cbc"`.
-3. "Calibration check": `python run_experiment.py check` must print 133000.64811 twice (the MUIO objective of the original case).
+3. "Reproduction check": `python run_experiment.py check` must print 133000.64811 twice (the MUIO objective of the original case).
 4. `python run_experiment.py` solves the 300 runs and writes `results.csv`.
 5. `python analyse.py` writes the tables and figures to `output/`.
 
@@ -63,11 +63,11 @@ output/                     summary.csv, drivers.csv and three figures
 
 * The cap always reaches zero in 2050, but emissions
   stay high until the 2030s. The price cuts emissions to about 19 Mt by 2030 and cumulative emissions by about 45 %, but never reaches zero.
-* New nuclear appears only with the cap, to reach exactly zero in 2050. It is built mostly after 2045
+* New nuclear appears only with the cap, to reach exactly zero in 2050. It is built mostly after 2045;
   part of this is an end-of-horizon effect of the model.
 * Demand is the main driver of nuclear, gas and cost under both policies.
 * The random forest is needed where the model has thresholds. Under the cap, cumulative CO2 depends on the gas
-  price when it is 20% cheaper because cheap gas replaces coal earlier. A linear regression explains 15 % of it,
+  price, when it is 20% cheaper than in the original data it replaces coal earlier and cumulative CO2 drops. A linear regression explains 15 % of this,
   the random forest 73 %. Under the price policy, new nuclear is only built when gas is expensive (linear 48 %,
   forest 90 %). Where the effect is close to a straight line (cost), both do equally well.
 
@@ -83,7 +83,7 @@ after 150 futures, it is not visible by eye which uncertainty causes what, becau
 change at the same time. A random forest learns the link between the uncertain inputs and each
 result, and permutation importance shows which input matters most.
 
-Before trusting it, the random forest is tested using 2 on futures it has not seen. It predicts the solver's results well (R2 0.73 to 0.98). This becomes useful for larger models. A multi-region model with hourly detail, can take hours per run, so thousands of scenarios cannot
+Before trusting it, the random forest is tested with 5-fold cross-validation on futures it has not seen. It predicts the solver's results well (R2 0.73 to 0.98). This becomes useful for larger models. A multi-region model with hourly detail, can take hours per run, so thousands of scenarios cannot
 be solved. A model like this random forest, trained on a few hundred real runs, could then predict the results of new scenarios in a shorter time. Two limits apply: it can only be
 trusted inside the ranges it was trained on, and it must always be checked against real runs.
 
@@ -95,6 +95,7 @@ trusted inside the ranges it was trained on, and it must always be checked again
 
 ## Ethics and attribution
 
-- The OSeMOSYS model of Poland (`model/data_poland.txt`) was built by [Emilia Ramos Hidalgo, Sonali Sonali, Rose Capistrant, Mia Reichow]. It is used here with the agreement of my co-authors. 
+- The OSeMOSYS model of Poland (`model/data_poland.txt`) was built by Emilia Ramos Hidalgo, Sonali Sonali, Rose Capistrant and Mia Reichow. It is used here with the agreement of my co-authors.
+- The work in this repository is my own.
 - The code was written with the help of an AI assistant (Claude).
 - The OSeMOSYS model file is the one distributed with MUIO v5.3 (open source, Apache 2.0 licence).

@@ -119,7 +119,7 @@ print(drivers.to_string(index=False))
 fig, ax = plt.subplots(figsize=(6, 4))
 data = ok[ok["policy"] == "cap"]
 ax.scatter(data["gas_price"], data["co2_total"], s=15, color=COLOURS["cap"])
-ax.set_xlabel("Gas price")
+ax.set_xlabel("Gas price (1.0 = price in the original data)")
 ax.set_ylabel("CO2 2023-2050 (Mt)")
 ax.set_title("Emission cap: cumulative CO2 vs gas price (one dot = one future)", loc="left", fontsize=10)
 ax.grid(color="#e6e5e1")
