@@ -10,8 +10,8 @@ import numpy as np
 # ----------------------------------------------------------------------------
 # Settings
 # ----------------------------------------------------------------------------
-GLPSOL = r"C:\Users\emili\AppData\Local\muio\app-5.3.0\resources\app\app\WebAPP\SOLVERs\GLPK\glpsol.exe"     # glpsol Insert path to glpsol.exe
-CBC = r"C:\Users\emili\AppData\Local\muio\app-5.3.0\resources\app\app\WebAPP\SOLVERs\COIN-OR\cbc.exe"           #cbc Insert path to cbc.exe
+GLPSOL = "glpsol"       #glpsol Insert path to glpsol.exe
+CBC = "cbc"           #cbc Insert path to cbc.exe
 MODEL_FILE = "model/model_muio_v5.3.txt"
 DATA_FILE = "model/data_processed.txt"
 RESULTS_FILE = "results.csv"

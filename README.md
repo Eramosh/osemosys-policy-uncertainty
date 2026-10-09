@@ -96,7 +96,5 @@ trusted inside the ranges it was trained on, and it must always be checked again
 ## Ethics and attribution
 
 - The OSeMOSYS model of Poland (`model/data_poland.txt`) was built by [Emilia Ramos Hidalgo, Sonali Sonali, Rose Capistrant, Mia Reichow]. It is used here with the agreement of my co-authors. 
-- The work in this repository (the uncertainty experiment, the policy comparison and the
-  machine-learning analysis) is my own.
 - The code was written with the help of an AI assistant (Claude).
 - The OSeMOSYS model file is the one distributed with MUIO v5.3 (open source, Apache 2.0 licence).
