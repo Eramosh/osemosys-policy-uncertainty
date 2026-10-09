@@ -1,0 +1,9 @@
+policy,result,R2 forest,R2 linear,Demand 2050 %,Gas price %,Renewable build limit %,Nuclear delay %
+cap,nuclear_2050,0.98,0.99,100,0,0,0
+cap,gas_2050,0.94,0.89,89,8,0,3
+cap,co2_total,0.73,0.15,13,75,9,2
+cap,system_cost,0.97,0.99,95,5,0,0
+price,nuclear_2050,0.9,0.48,6,92,1,1
+price,gas_2050,0.91,0.89,86,14,0,1
+price,co2_total,0.91,0.93,50,47,1,2
+price,system_cost,0.96,0.97,94,6,0,0
